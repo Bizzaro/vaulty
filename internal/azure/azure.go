@@ -17,6 +17,7 @@ type CacheService interface {
 // A AzureService writes queries to the AzureCLI using the currently logged in account.
 type AzureService struct {
 	CacheService CacheService
+	SecretsStow  map[string]string
 }
 
 // Returns a new instance of the AzureService.
@@ -24,6 +25,7 @@ type AzureService struct {
 func NewAzureService(cache CacheService) *AzureService {
 	azure := new(AzureService)
 	azure.CacheService = cache
+	azure.SecretsStow = make(map[string]string)
 	return azure
 }
 
@@ -67,6 +69,13 @@ func (az *AzureService) AzGetSecrets(name, subscriptionId string) []models.Secre
 // Requires a secret name, a keyvault name and subscription id.
 // Returns a secret in json format as a string.
 func (az *AzureService) AzShowSecret(secretName, vaultName, subscriptionId string) string {
-	out, _ := exec.Command("az", "keyvault", "secret", "show", "--vault-name", vaultName, "--name", secretName, "--subscription", subscriptionId, "--output", "json").CombinedOutput()
-	return string(out)
+	secret, ok := az.SecretsStow[subscriptionId+vaultName+secretName]
+	if !ok {
+		out, _ := exec.Command("az", "keyvault", "secret", "show", "--vault-name", vaultName, "--name", secretName, "--subscription", subscriptionId, "--output", "json").CombinedOutput()
+		az.SecretsStow[subscriptionId+vaultName+secretName] = string(out)
+		return string(out)
+	} else {
+		return secret
+	}
+
 }

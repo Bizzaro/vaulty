@@ -1,12 +1,37 @@
 # Vaulty
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/declan-whiting/vaulty)](https://goreportcard.com/report/github.com/declan-whiting/vaulty)
+[![Security Audit](https://img.shields.io/badge/security-audited-green)](SECURITY_AUDIT.md)
 
 An Azure Keyvault TUI, written in Golang using [tview](https://github.com/rivo/tview/tree/master). 
 
 ![Screenshot](vaulty.gif)
 
 Vaulty is under active development and is subject to change. 
+
+## Features
+
+- Browse multiple Azure Key Vaults and their secrets from a single TUI
+- Secrets list auto-focuses on startup — navigate without touching the mouse
+- Switch between vaults instantly with number keys (`1`–`9`)
+- Fuzzy search across secrets with `/`
+- View a secret's value with `d` or `Enter` — a loading overlay is shown while fetching
+- Re-fetch the latest secret value at any time with `r` (bypasses in-memory cache)
+- Copy the secret value directly to your clipboard with `y`
+- Sync all vault metadata and secret lists from Azure with `Ctrl+R`
+- Secret values are cached in-memory per session; list metadata is cached on disk
+
+## Keybindings
+
+| Key | Action |
+|-----|--------|
+| `d` / `Enter` | Show secret value |
+| `b` / `Esc` | Close secret view |
+| `y` | Copy secret value to clipboard |
+| `r` | Re-fetch secret (bypasses cache) |
+| `/` | Search secrets |
+| `1`–`9` | Switch vault |
+| `Ctrl+R` | Reload all vaults & secrets from Azure |
+| `q` | Quit |
 
 ## Building from source
 
@@ -35,8 +60,9 @@ make && ./bin/vaulty
 - Global search
 - Secret modification/deletion
 - Certificates management
-- Keys mananagement
+- Keys management
 - Themes
+
 
 
 

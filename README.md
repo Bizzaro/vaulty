@@ -2,7 +2,7 @@
 
 [![Security Audit](https://img.shields.io/badge/security-audited-green)](SECURITY_AUDIT.md)
 
-An Azure Keyvault TUI, written in Golang using [tview](https://github.com/rivo/tview/tree/master). 
+An Azure Keyvault TUI, written in Golang using [tview](https://github.com/rivo/tview/tree/master). Vaulty is a graphical frontend that runs `az` CLI commands under the hood — it requires the Azure CLI to be installed and authenticated.
 
 ![Screenshot](vaulty.gif)
 
@@ -32,6 +32,15 @@ Vaulty is under active development and is subject to change.
 | `1`–`9` | Switch vault |
 | `Ctrl+R` | Reload all vaults & secrets from Azure |
 | `q` | Quit |
+
+## Dependencies
+
+Vaulty requires the [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) to be installed and authenticated. All Azure API calls are delegated to the `az` CLI binary.
+
+```bash
+brew install azure-cli
+az login
+```
 
 ## Installation
 

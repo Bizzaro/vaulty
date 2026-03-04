@@ -4,6 +4,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/declan-whiting/vaulty/internal/models"
 	"gopkg.in/yaml.v3"
@@ -16,7 +17,11 @@ func NewConfigurationService() *ConfigrationService {
 }
 
 func (cs *ConfigrationService) GetConfiguration() models.ConfigurationList {
-	cacheVaultFile, err := os.Open("vaulty.conf")
+	home, err := os.UserHomeDir()
+	if err != nil {
+		log.Fatal(err)
+	}
+	cacheVaultFile, err := os.Open(filepath.Join(home, ".vaulty.conf"))
 	if err != nil {
 		log.Fatal(err)
 	}

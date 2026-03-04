@@ -33,11 +33,33 @@ Vaulty is under active development and is subject to change.
 | `Ctrl+R` | Reload all vaults & secrets from Azure |
 | `q` | Quit |
 
-## Building from source
+## Installation
+
+### Pre-built binaries
+
+Download the latest binary for your platform from the [Releases](https://github.com/Bizzaro/vaulty/releases) page.
+
+Create your config file at `~/.vaulty.conf`:
+
+``` yaml
+Keyvaults:
+  - Name: <keyvault-name>
+    Subscription: <keyvault-subscription-id>
+  - Name: <keyvault-name>
+    Subscription: <keyvault-subscription-id>
+```
+
+Then run the binary:
+
+``` bash
+./vaulty
+```
+
+### Building from source
 
 1. Clone the repository
-2. Update vaulty.conf
-   - You must configure at least one Keyvault. Remove any unused Keyvaults from configuration. 
+2. Create `~/.vaulty.conf`
+   - You must configure at least one Keyvault. Remove any unused Keyvaults from configuration.
 
 ``` yaml
 Keyvaults:

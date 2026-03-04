@@ -3,6 +3,7 @@ module github.com/declan-whiting/vaulty
 go 1.25.1
 
 require (
+	github.com/atotto/clipboard v0.1.4
 	github.com/gdamore/tcell/v2 v2.8.1
 	github.com/rivo/tview v0.42.1-0.20250904205922-4cdaaa9bd6f6
 	gopkg.in/yaml.v3 v3.0.1

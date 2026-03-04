@@ -55,6 +55,11 @@ Then run the binary:
 ./vaulty
 ```
 
+> **macOS users:** If macOS blocks the binary with an "unverified developer" warning, run:
+> ```bash
+> xattr -d com.apple.quarantine ~/Downloads/vaulty-darwin-arm64
+> ```
+
 ### Building from source
 
 1. Clone the repository

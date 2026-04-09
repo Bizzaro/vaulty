@@ -1,10 +1,11 @@
 package ui
 
 import (
+	"fmt"
+	"sync"
 	"time"
 
 	"github.com/declan-whiting/vaulty/internal/events"
-	"github.com/declan-whiting/vaulty/internal/models"
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
@@ -39,23 +40,35 @@ func (ui *Ui) ShowSearch() {
 
 func (ui *Ui) AddStatusControls() *Ui {
 	ui.Grid.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		if event.Rune() == rune(tcell.KeyCtrlR) {
+		if event.Key() == tcell.KeyCtrlR {
 			start := time.Now()
-			ui.Events.NewEvent("\U0001F510 Synchronise Started", "Took: 0.1s")
-			var vaults []models.KeyvaultModel
+			ui.Events.NewEvent("\U0001F510 Synchronise Started", "")
 
 			go func() {
-				defer ui.App.QueueUpdateDraw(func() { events.TimedEventLog(start, "\U0001F510 Synchronise Finished", *ui.Events) })
 				config := ui.Services.ConfigrationService.GetConfiguration()
+				var wg sync.WaitGroup
 
 				for _, v := range config.Keyvaults {
-					vaults = append(vaults, ui.Services.AzureService.AzShowKeyvault(v.Name, v.SubscriptionId))
+					wg.Add(1)
+					go func(name, subscriptionID string) {
+						defer wg.Done()
+						ui.Services.AzureService.AzGetSecrets(name, subscriptionID)
+					}(v.Name, v.SubscriptionId)
 				}
 
-				for i, v := range vaults {
-					vaults[i].Secrets = ui.Services.AzureService.AzGetSecrets(v.Name, v.SubscriptionId)
-				}
+				wg.Wait()
+
+				ui.Services.CacheService.WriteLastSync([]byte(fmt.Sprintf("Last Sync: %s", time.Now().Format(time.ANSIC))))
+
+				ui.App.QueueUpdateDraw(func() {
+					if ui.SecretsView.CurrentKeyvaultName != "" {
+						ui.SecretsView.NotifyUpdate(ui.SearchView.GetText())
+					}
+					events.TimedEventLog(start, "\U0001F510 Synchronise Finished", *ui.Events)
+				})
 			}()
+
+			return nil
 
 		}
 

@@ -33,6 +33,20 @@ Vaulty is under active development and is subject to change.
 | `Ctrl+R` | Reload all vaults & secrets from Azure |
 | `q` | Quit |
 
+## Cache
+
+Vault metadata and secret *lists* are cached on disk. Secret **values** are never written to disk — they are only held in memory for the session.
+
+The cache lives in `bin/cache/` **relative to the directory you run Vaulty from**, so running it from different directories gives you separate caches.
+
+Clear it at any time with:
+
+``` bash
+vaulty --clear-cache
+```
+
+Failed `az` calls are never cached, and any cache file that cannot be parsed is discarded automatically and refetched on the next run.
+
 ## Dependencies
 
 Vaulty requires the [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) to be installed and authenticated. All Azure API calls are delegated to the `az` CLI binary.

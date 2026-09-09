@@ -1,7 +1,9 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"os"
 	"sync"
 	"time"
 
@@ -13,9 +15,21 @@ import (
 )
 
 func main() {
+	clearCache := flag.Bool("clear-cache", false, "Delete all cached keyvault and secret data, then exit.")
+	flag.Parse()
+
 	configService := configuration.NewConfigurationService()
 	cacheService := cache.NewCacheService(configService)
 	azureService := azure.NewAzureService(cacheService)
+
+	if *clearCache {
+		if err := cacheService.Clear(); err != nil {
+			fmt.Printf("Failed to clear cache: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Println("Cache cleared.")
+		return
+	}
 
 	startUp(configService, cacheService, azureService)
 
